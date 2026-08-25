@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BRAV-M 24 - QCM Simple 14 Questions - Q7 SDOPAP</title>
+<style>
+*{box-sizing:border-box}body{margin:0;padding:12px;background:#0A1931;color:#fff;font-family:system-ui}
+.card{max-width:700px;margin:0 auto;background:#112240;border-radius:18px;padding:20px}
+h1{text-align:center;font-size:20px;margin:0 0 5px} .sub{text-align:center;font-size:11px;opacity:.7;margin-bottom:15px}
+.q{margin:14px 0;padding:14px;background:#0f2847;border-radius:12px;border:1px solid rgba(255,255,255,.1)}
+.q b{font-size:14px;display:block;margin-bottom:8px} label{display:flex;gap:10px;padding:12px;margin:6px 0;background:rgba(255,255,255,.07);border-radius:10px;font-size:13px;cursor:pointer}
+label.correct{background:#0a5c36!important;border:1px solid #2ecc71} label.wrong{background:#7a1a1a!important}
+.btn{width:100%;padding:15px;background:#FFD700;color:#0A1931;border:0;border-radius:12px;font-weight:900;font-size:16px;margin-top:12px;cursor:pointer}
+.ok{background:#0a5c36;padding:16px;border-radius:12px;text-align:center;margin-top:15px} .ko{background:#5c0a0a;padding:16px;border-radius:12px;text-align:center;margin-top:15px}
+.expl{margin-top:12px;text-align:left;background:rgba(0,0,0,.3);padding:12px;border-radius:10px;font-size:12px;line-height:1.5}
+.progress{height:8px;background:rgba(255,255,255,.15);border-radius:99px;overflow:hidden;margin:10px 0} .bar{height:100%;width:0;background:#FFD700;transition:.3s}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>VALIDATION 24 BRAV-M</h1>
+<div class="sub">14 QCM • Q7 = SDOPAP ✅ • 12/14 pour valider • Corrigé détaillé</div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div id="quiz"></div>
+<button class="btn" onclick="corriger()">VALIDER → VOIR CORRIGÉ</button>
+<div id="result"></div>
+</div>
+<script>
+const DATA=[
+{q:"Q1: En quelle année la BRAV-M a-t-elle été créée ?",opts:["2017","2018","2019","2020"],ok:2,exp:"Création en 2019 suite aux Gilets Jaunes."},
+{q:"Q2: Composition d'une Mike 01 ?",opts:["10+10","12+10","18 pilotes + 18 opérateurs","20+20"],ok:2,exp:"Mike = 36 effectifs (18+18), constituée impérativement."},
+{q:"Q3: Heure de départ en patrouille impératif ?",opts:["10h30","11h15","11h45","22h38"],ok:1,exp:"Départ 11h15 impératif."},
+{q:"Q4: Conduite EVEN-GRAVE / MO inopiné ?",opts:["Engagement direct","Aucun engagement direct, regroupement impératif sous autorité Mike","Trinôme","Retour base"],ok:1,exp:"Aucun engagement direct, regroupement Mike."},
+{q:"Q5: Doctrine RIO et caméra ?",opts:["Facultatifs","RIO apparent et caméra obligatoires","Seulement MO prévu","Interdits"],ok:1,exp:"RIO apparent + caméra obligatoires."},
+{q:"Q6: NSNMO pour la presse ?",opts:["Évacuée","Intouchable après sommations","RIO obligatoire","GAV"],ok:1,exp:"Presse intouchable après sommations."},
+{q:"Q7: BRAV-M dépend de ?",opts:["Circulation routière","SDGO","SDOPAP","DSPAP"],ok:2,exp:"Dépend de SDOPAP - c'est la version corrigée."},
+{q:"Q8: Priorité 1 quotidienne ?",opts:["Le Reliquat","Reliquat Binômé","La Mike 01 constituée impérativement","Reliquat Solo"],ok:2,exp:"Priorité Mike 01 constituée."},
+{q:"Q9: Je préserve l'image ?",opts:["Réagir à chaque provoc","Partager sur réseaux","Comportement exemplaire, aucune réaction, devoir de réserve absolu","Pas de caméras"],ok:2,exp:"Devoir de réserve absolu."},
+{q:"Q10: Fin de service normale ?",opts:["18h00","20h00","21h45 retour base / 22h38 fin","Minuit"],ok:2,exp:"21h45 retour base / 22h38 fin."},
+{q:"Q11: Que signifie NSNMO ?",opts:["Nouveau Schéma National du Maintien de l'Ordre","Nouveau Service National du Maintien Opérationnel","Nouveau Schéma National des Missions Opérationnelles","Nouveau Service National de la Mobilité et des Opérations"],ok:0,exp:"NSNMO = Nouveau Schéma National du Maintien de l'Ordre."},
+{q:"Q12: Le NSNMO prévoit :",opts:["Port cagoule systématique","Intervention des policiers motorisés s'ils sont formés et entraînés","Intervention en roulant","Lacrymo à la place des grenades de désencerclement"],ok:1,exp:"Intervention si formés et entraînés."},
+{q:"Q13: Caméra piéton obligatoire pour :",opts:["Me surveiller","Me protéger","Me traquer","Me piéger"],ok:1,exp:"Caméra = te protéger."},
+{q:"Q14: Port de la cagoule :",opts:["Autorisé quand on veut","Obligatoire","Uniquement MO violent ou grand froid","Pour intimider"],ok:2,exp:"Uniquement MO violent ou grand froid."}
+];
+let answers=Array(14).fill(null);
+const quizEl=document.getElementById('quiz');
+DATA.forEach((d,i)=>{
+let h=`<div class="q" id="q${i}"><b>${d.q}</b>`;
+d.opts.forEach((o,j)=>{h+=`<label onclick="sel(${i},${j})"><input type="radio" name="q${i}" id="q${i}_${j}"> ${String.fromCharCode(65+j)}. ${o}</label>`});
+h+=`</div>`;quizEl.innerHTML+=h;
+});
+function sel(i,j){answers[i]=j;document.getElementById(`q${i}_${j}`).checked=true;document.getElementById('bar').style.width=(answers.filter(a=>a!==null).length/14*100)+'%';}
+function corriger(){
+if(answers.includes(null)){alert("Réponds à toutes les questions");return;}
+let score=0,htmlExpl="";
+DATA.forEach((d,i)=>{
+let div=document.getElementById(`q${i}`);let labs=div.querySelectorAll('label');
+labs.forEach((lab,j)=>{lab.classList.remove('correct','wrong');if(j===d.ok) lab.classList.add('correct');if(j===answers[i] && j!==d.ok) lab.classList.add('wrong');});
+if(answers[i]===d.ok) score++;
+let icon=answers[i]===d.ok?"✅":"❌";
+htmlExpl+=`<div style="margin:8px 0;padding:8px;background:rgba(255,255,255,.06);border-radius:8px"><b>${icon} ${d.q}</b><br>Ta réponse : ${String.fromCharCode(65+answers[i])}. ${d.opts[answers[i]]}<br>Bonne réponse : ${String.fromCharCode(65+d.ok)}. ${d.opts[d.ok]}<br><span style="color:#FFD700">→ ${d.exp}</span></div>`;
+});
+let pct=Math.round(score/14*100);
+let res=document.getElementById('result');res.style.display='block';
+let detail=`<div class="expl"><b>📋 CORRIGÉ DÉTAILLÉ :</b>${htmlExpl}</div><button class="btn" style="background:#fff;color:#0A1931;margin-top:12px" onclick="window.scrollTo(0,0)">⬆️ REVOIR LES QUESTIONS</button><button class="btn" style="background:rgba(255,255,255,.15);color:#fff;margin-top:8px" onclick="location.reload()">🔄 RECOMMENCER</button>`;
+if(score>=12){res.innerHTML=`<div class="ok"><h2>✅ VALIDÉ - ${score}/14 (${pct}%)</h2><p>Bravo, validation acquise.</p>${detail}</div>`;}
+else{res.innerHTML=`<div class="ko"><h2>❌ ${score}/14 (${pct}%) - NON VALIDÉ</h2><p>Il faut 12/14 minimum. Recommence.</p>${detail}</div>`;}
+window.scrollTo(0,document.body.scrollHeight);
+}
+</script>
+</body>
+</html>
